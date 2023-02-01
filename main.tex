@@ -1,4 +1,5 @@
 \documentclass[report,11pt]{article} 
+\documentclass{article}
 
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
@@ -8,6 +9,14 @@
 \usetikzlibrary{shapes}
 \usepackage{natbib}
 \usepackage{hyperref}
+\usepackage{listings}
+
+\newcommand{\cmdname}[1]{\texttt{#1}}
+\newcommand\footurl[1]{\footnote{\url{#1}}}
+\newcommand\urllink[2]{#1\footurl{#2}}
+\newcommand\foothref[3]{#1\footnote{\href{#2}{#3}}}
+\usepackage{upquote}
+
 
 \title{
 \begin{center}
