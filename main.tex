@@ -49,7 +49,7 @@ While UDP does have these problems, they can be overcome using programming the c
 \item[Broadcast and Multicast]  protocol that, by itself, doesn't have built-in support for multicasting and not all networks or routers support multicasting, it requires network setup as the default Linux distribution does not have multicast enabled.
 \end{description}
 
- A sample code which uses acknowledgement to ensure message developed C/# is provided in this these lists: \urllink{UPDSender}{https://gist.github.com/b1ngster/50f5814d010b6d2cd79eec733a0d2bf1} and \urllink{UPDReceiver}{https://gist.github.com/b1ngster/50f5814d010b6d2cd79eec733a0d2bf1}. 
+ A sample code which uses acknowledgement to ensure message developed C\# is provided in this these lists: \urllink{UPDSender}{https://gist.github.com/b1ngster/50f5814d010b6d2cd79eec733a0d2bf1} and \urllink{UPDReceiver}{https://gist.github.com/b1ngster/50f5814d010b6d2cd79eec733a0d2bf1}. 
 
 In an architecture that uses multiple servers to communicate using other protocols, the TCP can help the network become more resilient, as there can often be problems with the network and ports. This recently happened to me when my server's memory became exhausted, only connecting via serial port. Therefore, developing a class that encapsulates messaging protocols using the strategy pattern should be considered. Indeed, Chaos Engineering is used by Netflix to ensure it is resilient, so switching off different services could also be implemented. 
 
