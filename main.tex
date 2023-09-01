@@ -15,7 +15,14 @@
 \newcommand\urllink[2]{#1\footurl{#2}}
 \newcommand\foothref[3]{#1\footnote{\href{#2}{#3}}}
 \usepackage{upquote}
-
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Overleaf Example},
+    pdfpagemode=FullScreen,
+}
 
 \title{Blog}
 
@@ -49,7 +56,7 @@ While UDP does have these problems, they can be overcome using programming the c
 \item[Broadcast and Multicast]  protocol that, by itself, doesn't have built-in support for multicasting and not all networks or routers support multicasting, it requires network setup as the default Linux distribution does not have multicast enabled.
 \end{description}
 
- A sample code which uses acknowledgement to ensure message developed C\# is provided in this these lists: \urllink{UPDSender}{https://gist.github.com/b1ngster/50f5814d010b6d2cd79eec733a0d2bf1} and \urllink{UPDReceiver}{https://gist.github.com/b1ngster/50f5814d010b6d2cd79eec733a0d2bf1}. 
+ A sample code which uses acknowledgement to ensure message developed C\# is provided in this these lists: \href{https://gist.github.com/b1ngster/50f5814d010b6d2cd79eec733a0d2bf1}{UPDSender} and \href{https://gist.github.com/b1ngster/50f5814d010b6d2cd79eec733a0d2bf1}{UPDReceiver}. 
 
 In an architecture that uses multiple servers to communicate using other protocols, the TCP can help the network become more resilient, as there can often be problems with the network and ports. This recently happened to me when my server's memory became exhausted, only connecting via serial port. Therefore, developing a class that encapsulates messaging protocols using the strategy pattern should be considered. Indeed, Chaos Engineering is used by Netflix to ensure it is resilient, so switching off different services could also be implemented. 
 
@@ -57,10 +64,10 @@ But it's not all about speed, but it helps to give users a great user experience
 
 
 
-\section*{7 June 2023 - \\ Like wolverine my scares have healed.}
-\addcontentsline{toc}{section}{\protect\numberline{} 7th June 2023 -Like Wolverine, my scars have healed.}
+\section*{7 June 2023 - \\ Resilient just like Wolverine}
+\addcontentsline{toc}{section}{\protect\numberline{} 7th June 2023 -Resilient just like Wolverine.}
 
-Really, I have had two biopsies on my nose, much like Hugh Jackman, and I have no bags under my eyes now. It was probably caused by wearing cheap glasses or crashing my electric bike. 
+Not just talking about my architecture, I have had two biopsies on my nose, much like Hugh Jackman, and I have no bags under my eyes now. It was probably caused by wearing cheap glasses or crashing my electric bike. 
 
 Apart from that, I have also spent much time applying for jobs, and I had an interview for a position where they asked for a presentation on the company. I didn't get the job as I didn't have experience in call handling. Anyway, it was nice to get off doing thirty-five hours of job searching and spending five days researching a company. The best people for the job are often rejected, such as Sofja Kowalewskaja, the first woman to get a PhD in mathematics.
 
