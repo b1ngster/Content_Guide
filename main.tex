@@ -10,11 +10,16 @@
 \usepackage{hyperref}
 \usepackage{listings}
 \usepackage{blindtext}
+
+\newcommand{\click}[2]{\href{http://#1}{\colorlet{temp}{.}\color{blue}{\underline{\color{temp}#2}}\color{temp}}}  
+\newcommand{\clicks}[2]{\href{https://#1}{\colorlet{temp}{.}\color{blue}{\underline{\color{temp}#2}}\color{temp}}}  
+
 \newcommand{\cmdname}[1]{\texttt{#1}}
 \newcommand\footurl[1]{\footnote{\url{#1}}}
 \newcommand\urllink[2]{#1\footurl{#2}}
 \newcommand\foothref[3]{#1\footnote{\href{#2}{#3}}}
 \usepackage{upquote}
+
 \hypersetup{
     colorlinks=true,
     linkcolor=blue,
@@ -23,7 +28,39 @@
     pdftitle={Overleaf Example},
     pdfpagemode=FullScreen,
 }
+\usepackage{xcolor}
+\usepackage{caption}
 
+
+%\DeclareCaptionFormat{mycaption}{#1}
+
+% Set the custom caption format for all listings
+%\captionsetup[lstlisting]{format=mycaption}
+\renewcommand{\lstlistingname}{}% Listing -> Algorithm
+\renewcommand{\lstlistlistingname}{List of \lstlistingname s}% List of Listings -> List of Algorithms
+
+\lstdefinestyle{csharpstyle}{
+    language={[Sharp]C},
+    backgroundcolor=\color{black}, % Background color of the code
+    basicstyle=\color{white}\ttfamily,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green},
+    stringstyle=\color{orange},
+    numberstyle=\tiny\color{white}, % Font color of line numbers
+    numbers=left,
+    breaklines=true,
+    showstringspaces=false,
+    tabsize=4,
+    frame=leftline,
+    framerule=2pt,
+    captionpos=t, % Position of the caption (bottom)
+    numbersep=10pt, % Space between line numbers and code
+    framexleftmargin=10pt, % Width of the line number background
+    rulecolor=\color{black}, % Color of the line separating code and line numbers
+}
+\lstset{
+    numbers=none, % Disable line numbering globally
+}
 \title{Blog}
 
 \author{B1ngster}
@@ -42,6 +79,8 @@
 \section*{31 August 2023 - \\ Acknowledgement to Security and Accessibility}
 \addcontentsline{toc}{section}{\protect\numberline{} 31 August 2023 - \\ Acknowledgement to Security and Accessibility}
 
+
+
 I have recently purchased a security certificate for bingster, so I can now use HTTP/3, which has recently been added to the stable version of NGINX.   HTTP/1.1 and HTTP/2 use TCP (Transmission Control Protocol). QUIC QUIC (Quick UDP Internet Connections)  is built on top of UDP (User Datagram Protocol) and is designed to reduce latency, improve connection migration, and enhance security, particularly for web applications. HTTP/1.1 and HTTP/2 use TCP (Transmission Control Protocol), whereas QUIC is built on UDP (User Datagram Protocol). 
 
 UDP is often used for video delivery, but there are other protocols, such as HTTP Live Streaming (HLS), which utilises adaptive streaming, or Real-Time Transport Protocol (RTP). With video content and audio messages, losing packets of data is not a problem as we can quickly move on, but there are messages where package loss is unacceptable. UDP is a faster protocol cos it does not maintain a connection. 
@@ -57,6 +96,18 @@ While UDP does have these problems, they can be overcome using programming the c
 \end{description}
 
  A sample code which uses acknowledgement to ensure message developed C\# is provided in this these lists: \href{https://gist.github.com/b1ngster/50f5814d010b6d2cd79eec733a0d2bf1}{UPDSender} and \href{https://gist.github.com/b1ngster/50f5814d010b6d2cd79eec733a0d2bf1}{UPDReceiver}. 
+
+
+\lstinputlisting[style=csharpstyle, title={ UDPSender }]{gists/UDPMessenger/UDPSender.cs}
+
+\lstinputlisting[style=csharpstyle, title={ UDPReceiver }]{gists/UDPMessenger/UDPReceiver.cs}
+
+
+
+
+
+
+ 
 
 In an architecture that uses multiple servers to communicate using other protocols, the TCP can help the network become more resilient, as there can often be problems with the network and ports. This recently happened to me when my server's memory became exhausted, only connecting via serial port. Therefore, developing a class that encapsulates messaging protocols using the strategy pattern should be considered. Indeed, Chaos Engineering is used by Netflix to ensure it is resilient, so switching off different services could also be implemented. 
 
