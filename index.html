@@ -109,7 +109,123 @@ the code would need to address issues such as:
 </dd></dl>
 <p>   A sample code which uses acknowledgement to ensure message developed C# is
 provided in this these lists: <a href='https://gist.github.com/b1ngster/50f5814d010b6d2cd79eec733a0d2bf1'>UPDSender</a> and <a href='https://gist.github.com/b1ngster/50f5814d010b6d2cd79eec733a0d2bf1'>UPDReceiver</a>.
-</p> 
+   </p> 
+<!-- l. 101 --><pre class='lstinputlisting' id='listing-1'><span class='label'><a id='x1-2001r1'></a><span class='cmr-5'>1</span></span><span style='color:#0000FF'><span class='cmtt-10'>using</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>System;</span> 
+</span><span class='label'><a id='x1-2002r2'></a><span class='cmr-5'>2</span></span><span style='color:#0000FF'><span class='cmtt-10'>using</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>System.Net;</span> 
+</span><span class='label'><a id='x1-2003r3'></a><span class='cmr-5'>3</span></span><span style='color:#0000FF'><span class='cmtt-10'>using</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>System.Net.Sockets;</span> 
+</span><span class='label'><a id='x1-2004r4'></a><span class='cmr-5'>4</span></span><span style='color:#0000FF'><span class='cmtt-10'>using</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>System.Text;</span> 
+</span><span class='label'><a id='x1-2005r5'></a><span class='cmr-5'>5</span></span> 
+<span class='label'><a id='x1-2006r6'></a><span class='cmr-5'>6</span></span><span style='color:#0000FF'><span class='cmtt-10'>class</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>UDPSender</span> 
+</span><span class='label'><a id='x1-2007r7'></a><span class='cmr-5'>7</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>{</span></span> 
+<span class='label'><a id='x1-2008r8'></a><span class='cmr-5'>8</span></span><span class='cmtt-10'>    </span><span style='color:#0000FF'><span class='cmtt-10'>private</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>UdpClient </span><span class='cmtt-10'>client;</span> 
+</span><span class='label'><a id='x1-2009r9'></a><span class='cmr-5'>9</span></span><span class='cmtt-10'>    </span><span style='color:#0000FF'><span class='cmtt-10'>private</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>IPEndPoint </span><span class='cmtt-10'>serverEndPoint;</span> 
+</span><span class='label'><a id='x1-2010r10'></a><span class='cmr-5'>10</span></span><span class='cmtt-10'>    </span><span style='color:#0000FF'><span class='cmtt-10'>private</span></span><span style='color:#FFFFFF'> </span><span style='color:#0000FF'><span class='cmtt-10'>int</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>sequenceNumber </span><span class='cmtt-10'>= </span><span class='cmtt-10'>0;</span> 
+</span><span class='label'><a id='x1-2011r11'></a><span class='cmr-5'>11</span></span> 
+<span class='label'><a id='x1-2012r12'></a><span class='cmr-5'>12</span></span><span class='cmtt-10'>    </span><span style='color:#0000FF'><span class='cmtt-10'>public</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>UDPSender(</span></span><span style='color:#0000FF'><span class='cmtt-10'>string</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>serverIp,</span> </span><span style='color:#0000FF'><span class='cmtt-10'>int</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>serverPort)</span> 
+</span><span class='label'><a id='x1-2013r13'></a><span class='cmr-5'>13</span></span><span class='cmtt-10'>    </span><span style='color:#FFFFFF'><span class='cmtt-10'>{</span></span> 
+<span class='label'><a id='x1-2014r14'></a><span class='cmr-5'>14</span></span><span class='cmtt-10'>        </span><span style='color:#FFFFFF'><span class='cmtt-10'>client</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>=</span> </span><span style='color:#0000FF'><span class='cmtt-10'>new</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>UdpClient();</span> 
+</span><span class='label'><a id='x1-2015r15'></a><span class='cmr-5'>15</span></span><span class='cmtt-10'>        </span><span style='color:#FFFFFF'><span class='cmtt-10'>serverEndPoint</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>=</span> </span><span style='color:#0000FF'><span class='cmtt-10'>new</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>IPEndPoint(IPAddress.Parse(serverIp), </span><span class='cmtt-10'>serverPort);</span> 
+</span><span class='label'><a id='x1-2016r16'></a><span class='cmr-5'>16</span></span><span class='cmtt-10'>    </span><span style='color:#FFFFFF'><span class='cmtt-10'>}</span></span> 
+<span class='label'><a id='x1-2017r17'></a><span class='cmr-5'>17</span></span> 
+<span class='label'><a id='x1-2018r18'></a><span class='cmr-5'>18</span></span><span class='cmtt-10'>    </span><span style='color:#0000FF'><span class='cmtt-10'>public</span></span><span style='color:#FFFFFF'> </span><span style='color:#0000FF'><span class='cmtt-10'>void</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>Send(</span></span><span style='color:#0000FF'><span class='cmtt-10'>string</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>message)</span> 
+</span><span class='label'><a id='x1-2019r19'></a><span class='cmr-5'>19</span></span><span class='cmtt-10'>    </span><span style='color:#FFFFFF'><span class='cmtt-10'>{</span></span> 
+<span class='label'><a id='x1-2020r20'></a><span class='cmr-5'>20</span></span><span class='cmtt-10'>        </span><span style='color:#0000FF'><span class='cmtt-10'>byte</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>[]</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>data </span><span class='cmtt-10'>= </span><span class='cmtt-10'>Encoding.UTF8.GetBytes(message);</span> 
+</span><span class='label'><a id='x1-2021r21'></a><span class='cmr-5'>21</span></span><span class='cmtt-10'>        </span><span style='color:#0000FF'><span class='cmtt-10'>byte</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>[]</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>packet </span><span class='cmtt-10'>= </span><span class='cmtt-10'>CreatePacket(data);</span> 
+</span><span class='label'><a id='x1-2022r22'></a><span class='cmr-5'>22</span></span> 
+<span class='label'><a id='x1-2023r23'></a><span class='cmr-5'>23</span></span><span class='cmtt-10'>        </span><span style='color:#0000FF'><span class='cmtt-10'>while</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>(</span></span><span style='color:#0000FF'><span class='cmtt-10'>true</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>)</span></span> 
+<span class='label'><a id='x1-2024r24'></a><span class='cmr-5'>24</span></span><span class='cmtt-10'>        </span><span style='color:#FFFFFF'><span class='cmtt-10'>{</span></span> 
+<span class='label'><a id='x1-2025r25'></a><span class='cmr-5'>25</span></span><span class='cmtt-10'>            </span><span style='color:#FFFFFF'><span class='cmtt-10'>SendPacket</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>(</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>packet</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>)</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>;</span></span> 
+<span class='label'><a id='x1-2026r26'></a><span class='cmr-5'>26</span></span> 
+<span class='label'><a id='x1-2027r27'></a><span class='cmr-5'>27</span></span><span class='cmtt-10'>            </span><span style='color:#00FF00'><span class='cmtt-10'>//</span></span><span style='color:#00FF00'> <span class='cmtt-10'>Wait </span><span class='cmtt-10'>for </span><span class='cmtt-10'>acknowledgment </span><span class='cmtt-10'>(ACK)</span> 
+</span><span class='label'><a id='x1-2028r28'></a><span class='cmr-5'>28</span></span><span class='cmtt-10'>            </span><span style='color:#0000FF'><span class='cmtt-10'>byte</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>[]</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>ackData </span><span class='cmtt-10'>= </span><span class='cmtt-10'>ReceiveAck();</span> 
+</span><span class='label'><a id='x1-2029r29'></a><span class='cmr-5'>29</span></span><span class='cmtt-10'>            </span><span style='color:#0000FF'><span class='cmtt-10'>int</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>ackSequenceNumber </span><span class='cmtt-10'>= </span><span class='cmtt-10'>BitConverter.ToInt32(ackData, </span><span class='cmtt-10'>0);</span> 
+</span><span class='label'><a id='x1-2030r30'></a><span class='cmr-5'>30</span></span> 
+<span class='label'><a id='x1-2031r31'></a><span class='cmr-5'>31</span></span><span class='cmtt-10'>            </span><span style='color:#0000FF'><span class='cmtt-10'>if</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>(ackSequenceNumber </span><span class='cmtt-10'>== </span><span class='cmtt-10'>sequenceNumber)</span> 
+</span><span class='label'><a id='x1-2032r32'></a><span class='cmr-5'>32</span></span><span class='cmtt-10'>            </span><span style='color:#FFFFFF'><span class='cmtt-10'>{</span></span> 
+<span class='label'><a id='x1-2033r33'></a><span class='cmr-5'>33</span></span><span class='cmtt-10'>                </span><span style='color:#FFFFFF'><span class='cmtt-10'>Console</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>.</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>WriteLine</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>(</span></span><span style='color:#FF8000'><span class='cmtt-10'>"</span></span><span style='color:#FF8000'><span class='cmtt-10'>Message</span></span><span style='color:#FF8000'> <span class='cmtt-10'>sent </span><span class='cmtt-10'>and </span><span class='cmtt-10'>acknowledged: </span><span class='cmtt-10'>"</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>+ </span><span class='cmtt-10'>message);</span> 
+</span><span class='label'><a id='x1-2034r34'></a><span class='cmr-5'>34</span></span><span class='cmtt-10'>                </span><span style='color:#FFFFFF'><span class='cmtt-10'>sequenceNumber</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>++;</span></span> 
+<span class='label'><a id='x1-2035r35'></a><span class='cmr-5'>35</span></span><span class='cmtt-10'>                </span><span style='color:#0000FF'><span class='cmtt-10'>break</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>;</span></span> 
+<span class='label'><a id='x1-2036r36'></a><span class='cmr-5'>36</span></span><span class='cmtt-10'>            </span><span style='color:#FFFFFF'><span class='cmtt-10'>}</span></span> 
+<span class='label'><a id='x1-2037r37'></a><span class='cmr-5'>37</span></span><span class='cmtt-10'>        </span><span style='color:#FFFFFF'><span class='cmtt-10'>}</span></span> 
+<span class='label'><a id='x1-2038r38'></a><span class='cmr-5'>38</span></span><span class='cmtt-10'>    </span><span style='color:#FFFFFF'><span class='cmtt-10'>}</span></span> 
+<span class='label'><a id='x1-2039r39'></a><span class='cmr-5'>39</span></span> 
+<span class='label'><a id='x1-2040r40'></a><span class='cmr-5'>40</span></span><span class='cmtt-10'>    </span><span style='color:#0000FF'><span class='cmtt-10'>private</span></span><span style='color:#FFFFFF'> </span><span style='color:#0000FF'><span class='cmtt-10'>byte</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>[]</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>CreatePacket(</span></span><span style='color:#0000FF'><span class='cmtt-10'>byte</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>[]</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>data)</span> 
+</span><span class='label'><a id='x1-2041r41'></a><span class='cmr-5'>41</span></span><span class='cmtt-10'>    </span><span style='color:#FFFFFF'><span class='cmtt-10'>{</span></span> 
+<span class='label'><a id='x1-2042r42'></a><span class='cmr-5'>42</span></span><span class='cmtt-10'>        </span><span style='color:#0000FF'><span class='cmtt-10'>byte</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>[]</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>sequenceBytes </span><span class='cmtt-10'>= </span><span class='cmtt-10'>BitConverter.GetBytes(sequenceNumber);</span> 
+</span><span class='label'><a id='x1-2043r43'></a><span class='cmr-5'>43</span></span><span class='cmtt-10'>        </span><span style='color:#0000FF'><span class='cmtt-10'>byte</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>[]</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>packet </span><span class='cmtt-10'>=</span> </span><span style='color:#0000FF'><span class='cmtt-10'>new</span></span><span style='color:#FFFFFF'> </span><span style='color:#0000FF'><span class='cmtt-10'>byte</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>[</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>sequenceBytes</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>.</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>Length</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>+ </span><span class='cmtt-10'>data.Length];</span> 
+</span><span class='label'><a id='x1-2044r44'></a><span class='cmr-5'>44</span></span> 
+<span class='label'><a id='x1-2045r45'></a><span class='cmr-5'>45</span></span><span class='cmtt-10'>        </span><span style='color:#FFFFFF'><span class='cmtt-10'>Buffer</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>.</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>BlockCopy</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>(</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>sequenceBytes</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>,</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>0, </span><span class='cmtt-10'>packet, </span><span class='cmtt-10'>0, </span><span class='cmtt-10'>sequenceBytes.Length);</span> 
+</span><span class='label'><a id='x1-2046r46'></a><span class='cmr-5'>46</span></span><span class='cmtt-10'>        </span><span style='color:#FFFFFF'><span class='cmtt-10'>Buffer</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>.</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>BlockCopy</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>(</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>data</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>,</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>0, </span><span class='cmtt-10'>packet, </span><span class='cmtt-10'>sequenceBytes.Length, </span><span class='cmtt-10'>data.Length);</span> 
+</span><span class='label'><a id='x1-2047r47'></a><span class='cmr-5'>47</span></span> 
+<span class='label'><a id='x1-2048r48'></a><span class='cmr-5'>48</span></span><span class='cmtt-10'>        </span><span style='color:#0000FF'><span class='cmtt-10'>return</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>packet;</span> 
+</span><span class='label'><a id='x1-2049r49'></a><span class='cmr-5'>49</span></span><span class='cmtt-10'>    </span><span style='color:#FFFFFF'><span class='cmtt-10'>}</span></span> 
+<span class='label'><a id='x1-2050r50'></a><span class='cmr-5'>50</span></span> 
+<span class='label'><a id='x1-2051r51'></a><span class='cmr-5'>51</span></span><span class='cmtt-10'>    </span><span style='color:#0000FF'><span class='cmtt-10'>private</span></span><span style='color:#FFFFFF'> </span><span style='color:#0000FF'><span class='cmtt-10'>void</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>SendPacket(</span></span><span style='color:#0000FF'><span class='cmtt-10'>byte</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>[]</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>packet)</span> 
+</span><span class='label'><a id='x1-2052r52'></a><span class='cmr-5'>52</span></span><span class='cmtt-10'>    </span><span style='color:#FFFFFF'><span class='cmtt-10'>{</span></span> 
+<span class='label'><a id='x1-2053r53'></a><span class='cmr-5'>53</span></span><span class='cmtt-10'>        </span><span style='color:#FFFFFF'><span class='cmtt-10'>client</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>.</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>Send</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>(</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>packet</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>,</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>packet.Length, </span><span class='cmtt-10'>serverEndPoint);</span> 
+</span><span class='label'><a id='x1-2054r54'></a><span class='cmr-5'>54</span></span><span class='cmtt-10'>    </span><span style='color:#FFFFFF'><span class='cmtt-10'>}</span></span> 
+<span class='label'><a id='x1-2055r55'></a><span class='cmr-5'>55</span></span> 
+<span class='label'><a id='x1-2056r56'></a><span class='cmr-5'>56</span></span><span class='cmtt-10'>    </span><span style='color:#0000FF'><span class='cmtt-10'>private</span></span><span style='color:#FFFFFF'> </span><span style='color:#0000FF'><span class='cmtt-10'>byte</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>[]</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>ReceiveAck()</span> 
+</span><span class='label'><a id='x1-2057r57'></a><span class='cmr-5'>57</span></span><span class='cmtt-10'>    </span><span style='color:#FFFFFF'><span class='cmtt-10'>{</span></span> 
+<span class='label'><a id='x1-2058r58'></a><span class='cmr-5'>58</span></span><span class='cmtt-10'>        </span><span style='color:#0000FF'><span class='cmtt-10'>return</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>client.Receive(</span></span><span style='color:#0000FF'><span class='cmtt-10'>ref</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>serverEndPoint);</span> 
+</span><span class='label'><a id='x1-2059r59'></a><span class='cmr-5'>59</span></span><span class='cmtt-10'>    </span><span style='color:#FFFFFF'><span class='cmtt-10'>}</span></span> 
+<span class='label'><a id='x1-2060r60'></a><span class='cmr-5'>60</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>}</span></span>
+   </pre>
+   <!-- l. 103 --><pre class='lstinputlisting' id='listing-2'><span class='label'><a id='x1-2061r1'></a><span class='cmr-5'>1</span></span><span style='color:#0000FF'><span class='cmtt-10'>using</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>System;</span> 
+</span><span class='label'><a id='x1-2062r2'></a><span class='cmr-5'>2</span></span><span style='color:#0000FF'><span class='cmtt-10'>using</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>System.Net;</span> 
+</span><span class='label'><a id='x1-2063r3'></a><span class='cmr-5'>3</span></span><span style='color:#0000FF'><span class='cmtt-10'>using</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>System.Net.Sockets;</span> 
+</span><span class='label'><a id='x1-2064r4'></a><span class='cmr-5'>4</span></span><span style='color:#0000FF'><span class='cmtt-10'>using</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>System.Text;</span> 
+</span><span class='label'><a id='x1-2065r5'></a><span class='cmr-5'>5</span></span> 
+<span class='label'><a id='x1-2066r6'></a><span class='cmr-5'>6</span></span><span style='color:#0000FF'><span class='cmtt-10'>class</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>UDPReceiver</span> 
+</span><span class='label'><a id='x1-2067r7'></a><span class='cmr-5'>7</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>{</span></span> 
+<span class='label'><a id='x1-2068r8'></a><span class='cmr-5'>8</span></span><span class='cmtt-10'>    </span><span style='color:#0000FF'><span class='cmtt-10'>private</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>UdpClient </span><span class='cmtt-10'>listener;</span> 
+</span><span class='label'><a id='x1-2069r9'></a><span class='cmr-5'>9</span></span><span class='cmtt-10'>    </span><span style='color:#0000FF'><span class='cmtt-10'>private</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>IPEndPoint </span><span class='cmtt-10'>senderEndPoint;</span> 
+</span><span class='label'><a id='x1-2070r10'></a><span class='cmr-5'>10</span></span><span class='cmtt-10'>    </span><span style='color:#0000FF'><span class='cmtt-10'>private</span></span><span style='color:#FFFFFF'> </span><span style='color:#0000FF'><span class='cmtt-10'>int</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>expectedSequenceNumber </span><span class='cmtt-10'>= </span><span class='cmtt-10'>0;</span> 
+</span><span class='label'><a id='x1-2071r11'></a><span class='cmr-5'>11</span></span> 
+<span class='label'><a id='x1-2072r12'></a><span class='cmr-5'>12</span></span><span class='cmtt-10'>    </span><span style='color:#0000FF'><span class='cmtt-10'>public</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>UDPReceiver(</span></span><span style='color:#0000FF'><span class='cmtt-10'>int</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>listenPort)</span> 
+</span><span class='label'><a id='x1-2073r13'></a><span class='cmr-5'>13</span></span><span class='cmtt-10'>    </span><span style='color:#FFFFFF'><span class='cmtt-10'>{</span></span> 
+<span class='label'><a id='x1-2074r14'></a><span class='cmr-5'>14</span></span><span class='cmtt-10'>        </span><span style='color:#FFFFFF'><span class='cmtt-10'>listener</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>=</span> </span><span style='color:#0000FF'><span class='cmtt-10'>new</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>UdpClient(listenPort);</span> 
+</span><span class='label'><a id='x1-2075r15'></a><span class='cmr-5'>15</span></span><span class='cmtt-10'>        </span><span style='color:#FFFFFF'><span class='cmtt-10'>senderEndPoint</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>=</span> </span><span style='color:#0000FF'><span class='cmtt-10'>new</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>IPEndPoint(IPAddress.Any, </span><span class='cmtt-10'>0);</span> 
+</span><span class='label'><a id='x1-2076r16'></a><span class='cmr-5'>16</span></span><span class='cmtt-10'>    </span><span style='color:#FFFFFF'><span class='cmtt-10'>}</span></span> 
+<span class='label'><a id='x1-2077r17'></a><span class='cmr-5'>17</span></span> 
+<span class='label'><a id='x1-2078r18'></a><span class='cmr-5'>18</span></span><span class='cmtt-10'>    </span><span style='color:#0000FF'><span class='cmtt-10'>public</span></span><span style='color:#FFFFFF'> </span><span style='color:#0000FF'><span class='cmtt-10'>void</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>Receive()</span> 
+</span><span class='label'><a id='x1-2079r19'></a><span class='cmr-5'>19</span></span><span class='cmtt-10'>    </span><span style='color:#FFFFFF'><span class='cmtt-10'>{</span></span> 
+<span class='label'><a id='x1-2080r20'></a><span class='cmr-5'>20</span></span><span class='cmtt-10'>        </span><span style='color:#0000FF'><span class='cmtt-10'>while</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>(</span></span><span style='color:#0000FF'><span class='cmtt-10'>true</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>)</span></span> 
+<span class='label'><a id='x1-2081r21'></a><span class='cmr-5'>21</span></span><span class='cmtt-10'>        </span><span style='color:#FFFFFF'><span class='cmtt-10'>{</span></span> 
+<span class='label'><a id='x1-2082r22'></a><span class='cmr-5'>22</span></span><span class='cmtt-10'>            </span><span style='color:#0000FF'><span class='cmtt-10'>byte</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>[]</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>packet </span><span class='cmtt-10'>= </span><span class='cmtt-10'>ReceivePacket();</span> 
+</span><span class='label'><a id='x1-2083r23'></a><span class='cmr-5'>23</span></span><span class='cmtt-10'>            </span><span style='color:#0000FF'><span class='cmtt-10'>int</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>receivedSequenceNumber </span><span class='cmtt-10'>= </span><span class='cmtt-10'>BitConverter.ToInt32(packet, </span><span class='cmtt-10'>0);</span> 
+</span><span class='label'><a id='x1-2084r24'></a><span class='cmr-5'>24</span></span><span class='cmtt-10'>            </span><span style='color:#0000FF'><span class='cmtt-10'>byte</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>[]</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>data </span><span class='cmtt-10'>=</span> </span><span style='color:#0000FF'><span class='cmtt-10'>new</span></span><span style='color:#FFFFFF'> </span><span style='color:#0000FF'><span class='cmtt-10'>byte</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>[</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>packet</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>.</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>Length</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>-</span> </span><span style='color:#0000FF'><span class='cmtt-10'>sizeof</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>(</span></span><span style='color:#0000FF'><span class='cmtt-10'>int</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>)</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>];</span></span> 
+<span class='label'><a id='x1-2085r25'></a><span class='cmr-5'>25</span></span><span class='cmtt-10'>            </span><span style='color:#FFFFFF'><span class='cmtt-10'>Buffer</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>.</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>BlockCopy</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>(</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>packet</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>,</span></span><span style='color:#FFFFFF'> </span><span style='color:#0000FF'><span class='cmtt-10'>sizeof</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>(</span></span><span style='color:#0000FF'><span class='cmtt-10'>int</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>)</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>,</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>data, </span><span class='cmtt-10'>0, </span><span class='cmtt-10'>data.Length);</span> 
+</span><span class='label'><a id='x1-2086r26'></a><span class='cmr-5'>26</span></span> 
+<span class='label'><a id='x1-2087r27'></a><span class='cmr-5'>27</span></span><span class='cmtt-10'>            </span><span style='color:#0000FF'><span class='cmtt-10'>if</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>(receivedSequenceNumber </span><span class='cmtt-10'>== </span><span class='cmtt-10'>expectedSequenceNumber)</span> 
+</span><span class='label'><a id='x1-2088r28'></a><span class='cmr-5'>28</span></span><span class='cmtt-10'>            </span><span style='color:#FFFFFF'><span class='cmtt-10'>{</span></span> 
+<span class='label'><a id='x1-2089r29'></a><span class='cmr-5'>29</span></span><span class='cmtt-10'>                </span><span style='color:#FFFFFF'><span class='cmtt-10'>SendAck</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>(</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>expectedSequenceNumber</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>)</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>;</span></span> 
+<span class='label'><a id='x1-2090r30'></a><span class='cmr-5'>30</span></span><span class='cmtt-10'>                </span><span style='color:#FFFFFF'><span class='cmtt-10'>Console</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>.</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>WriteLine</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>(</span></span><span style='color:#FF8000'><span class='cmtt-10'>"</span></span><span style='color:#FF8000'><span class='cmtt-10'>Received</span></span><span style='color:#FF8000'> <span class='cmtt-10'>message: </span><span class='cmtt-10'>"</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>+ </span><span class='cmtt-10'>Encoding.UTF8.GetString(data));</span> 
+</span><span class='label'><a id='x1-2091r31'></a><span class='cmr-5'>31</span></span><span class='cmtt-10'>                </span><span style='color:#FFFFFF'><span class='cmtt-10'>expectedSequenceNumber</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>++;</span></span> 
+<span class='label'><a id='x1-2092r32'></a><span class='cmr-5'>32</span></span><span class='cmtt-10'>            </span><span style='color:#FFFFFF'><span class='cmtt-10'>}</span></span> 
+<span class='label'><a id='x1-2093r33'></a><span class='cmr-5'>33</span></span><span class='cmtt-10'>            </span><span style='color:#0000FF'><span class='cmtt-10'>else</span></span><span style='color:#FFFFFF'> </span><span style='color:#0000FF'><span class='cmtt-10'>if</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>(receivedSequenceNumber </span><span class='cmtt-10'>&lt; </span><span class='cmtt-10'>expectedSequenceNumber)</span> 
+</span><span class='label'><a id='x1-2094r34'></a><span class='cmr-5'>34</span></span><span class='cmtt-10'>            </span><span style='color:#FFFFFF'><span class='cmtt-10'>{</span></span> 
+<span class='label'><a id='x1-2095r35'></a><span class='cmr-5'>35</span></span><span class='cmtt-10'>                </span><span style='color:#FFFFFF'><span class='cmtt-10'>SendAck</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>(</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>receivedSequenceNumber</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>)</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>;</span></span><span style='color:#FFFFFF'> </span><span style='color:#00FF00'><span class='cmtt-10'>//</span></span><span style='color:#00FF00'> <span class='cmtt-10'>Acknowledge </span><span class='cmtt-10'>the </span><span class='cmtt-10'>duplicate</span> 
+</span><span class='label'><a id='x1-2096r36'></a><span class='cmr-5'>36</span></span><span class='cmtt-10'>            </span><span style='color:#FFFFFF'><span class='cmtt-10'>}</span></span> 
+<span class='label'><a id='x1-2097r37'></a><span class='cmr-5'>37</span></span><span class='cmtt-10'>            </span><span style='color:#0000FF'><span class='cmtt-10'>else</span></span> 
+<span class='label'><a id='x1-2098r38'></a><span class='cmr-5'>38</span></span><span class='cmtt-10'>            </span><span style='color:#FFFFFF'><span class='cmtt-10'>{</span></span> 
+<span class='label'><a id='x1-2099r39'></a><span class='cmr-5'>39</span></span><span class='cmtt-10'>                </span><span style='color:#00FF00'><span class='cmtt-10'>//</span></span><span style='color:#00FF00'> <span class='cmtt-10'>Out-of-order </span><span class='cmtt-10'>packet </span><span class='cmtt-10'>received, </span><span class='cmtt-10'>don</span><span class='tctt-1000'>'</span><span class='cmtt-10'>t </span><span class='cmtt-10'>send </span><span class='cmtt-10'>ACK</span> 
+</span><span class='label'><a id='x1-2100r40'></a><span class='cmr-5'>40</span></span><span class='cmtt-10'>            </span><span style='color:#FFFFFF'><span class='cmtt-10'>}</span></span> 
+<span class='label'><a id='x1-2101r41'></a><span class='cmr-5'>41</span></span><span class='cmtt-10'>        </span><span style='color:#FFFFFF'><span class='cmtt-10'>}</span></span> 
+<span class='label'><a id='x1-2102r42'></a><span class='cmr-5'>42</span></span><span class='cmtt-10'>    </span><span style='color:#FFFFFF'><span class='cmtt-10'>}</span></span> 
+<span class='label'><a id='x1-2103r43'></a><span class='cmr-5'>43</span></span> 
+<span class='label'><a id='x1-2104r44'></a><span class='cmr-5'>44</span></span><span class='cmtt-10'>    </span><span style='color:#0000FF'><span class='cmtt-10'>private</span></span><span style='color:#FFFFFF'> </span><span style='color:#0000FF'><span class='cmtt-10'>byte</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>[]</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>ReceivePacket()</span> 
+</span><span class='label'><a id='x1-2105r45'></a><span class='cmr-5'>45</span></span><span class='cmtt-10'>    </span><span style='color:#FFFFFF'><span class='cmtt-10'>{</span></span> 
+<span class='label'><a id='x1-2106r46'></a><span class='cmr-5'>46</span></span><span class='cmtt-10'>        </span><span style='color:#0000FF'><span class='cmtt-10'>return</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>listener.Receive(</span></span><span style='color:#0000FF'><span class='cmtt-10'>ref</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>senderEndPoint);</span> 
+</span><span class='label'><a id='x1-2107r47'></a><span class='cmr-5'>47</span></span><span class='cmtt-10'>    </span><span style='color:#FFFFFF'><span class='cmtt-10'>}</span></span> 
+<span class='label'><a id='x1-2108r48'></a><span class='cmr-5'>48</span></span> 
+<span class='label'><a id='x1-2109r49'></a><span class='cmr-5'>49</span></span><span class='cmtt-10'>    </span><span style='color:#0000FF'><span class='cmtt-10'>private</span></span><span style='color:#FFFFFF'> </span><span style='color:#0000FF'><span class='cmtt-10'>void</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>SendAck(</span></span><span style='color:#0000FF'><span class='cmtt-10'>int</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>ackSequenceNumber)</span> 
+</span><span class='label'><a id='x1-2110r50'></a><span class='cmr-5'>50</span></span><span class='cmtt-10'>    </span><span style='color:#FFFFFF'><span class='cmtt-10'>{</span></span> 
+<span class='label'><a id='x1-2111r51'></a><span class='cmr-5'>51</span></span><span class='cmtt-10'>        </span><span style='color:#0000FF'><span class='cmtt-10'>byte</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>[]</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>ackData </span><span class='cmtt-10'>= </span><span class='cmtt-10'>BitConverter.GetBytes(ackSequenceNumber);</span> 
+</span><span class='label'><a id='x1-2112r52'></a><span class='cmr-5'>52</span></span><span class='cmtt-10'>        </span><span style='color:#FFFFFF'><span class='cmtt-10'>listener</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>.</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>Send</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>(</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>ackData</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>,</span></span><span style='color:#FFFFFF'> <span class='cmtt-10'>ackData.Length, </span><span class='cmtt-10'>senderEndPoint);</span> 
+</span><span class='label'><a id='x1-2113r53'></a><span class='cmr-5'>53</span></span><span class='cmtt-10'>    </span><span style='color:#FFFFFF'><span class='cmtt-10'>}</span></span> 
+<span class='label'><a id='x1-2114r54'></a><span class='cmr-5'>54</span></span><span style='color:#FFFFFF'><span class='cmtt-10'>}</span></span>
+   </pre>
 <p>   In an architecture that uses multiple servers to communicate using other
 protocols, the TCP can help the network become more resilient, as there can often
 be problems with the network and ports. This recently happened to me
@@ -124,6 +240,9 @@ Well, if it was, I wouldn’t be using Laravel... - It has Google’s Lighthouse
 which enables Testing for accessible issues that can be difficult for designers to
 identify. Indeed, several other tools provide heuristic and accessible evaluations to the
 I have started implementing these classes.
+                                                                  
+
+                                                                  
 </p> 
 <p>
    </p> 
@@ -141,9 +260,6 @@ Anyway, it was nice to get off doing thirty-five hours of job searching and
 spending five days researching a company. The best people for the job are
 often rejected, such as Sofja Kowalewskaja, the first woman to get a PhD in
 mathematics.
-                                                                  
-
-                                                                  
 </p> 
 <p>
    </p> 
@@ -175,6 +291,9 @@ application. Kubernetes is written in Go; I have been learning Go, but Rust is a
 faster programming language... These programming languages are functional and are
 highly complex. Most of my previous work has used languages such as PHP, for
 which I have been receiving many emails asking about my interest in roles. Therefore,
+                                                                  
+
+                                                                  
 I favour using Roadrunner, a PHP server written in Go. This benefits by enabling the
 development of websites using the simple syntax of PHP while having the ability to
 make optimisations using Go.
@@ -188,9 +307,6 @@ make optimisations using Go.
 and I am applying for it as the job is for a company that delivers a workflow solution
 for companies in the renewable sector. This aligns with my goals; however, the
 position requires 4 years of React experience, but I haven’t used it in 2 years as it
-                                                                  
-
-                                                                  
 was not used in my dissertation year, and I have not used it while studying MSc
 Applied Data Science.
 </p> 
@@ -274,31 +390,35 @@ communicated via WhatsApp, which was unfortunate not having a mobile telephone
 myself. I thought we were using Microsoft Teams, and everyone was too busy
 researching.
    </p> 
-<figure class='figure' id='-assigned-tasks'> 
+<figure class='figure' id='-assigned-tasks-'> 
 
                                                                   
 
                                                                   
-<a id='x1-70011'></a>
                                                                   
 
                                                                   
-<figcaption class='caption'><span class='id'>Figure 1: </span><span class='content'>Assigned Tasks</span></figcaption><!-- tex4ht:label?: x1-70011  -->
+<a id='x1-7001r1'></a>
+<a id='x1-7002'></a>
+<figcaption class='caption'><span class='id'>Figure 1: </span><span class='content'>Assigned Tasks
+</span></figcaption><!-- tex4ht:label?: x1-7001r  -->
 <img alt='PIC' height='172' src='images/feb/tasklist.png' width='172' />
                                                                   
 
                                                                   
    </figure>
-   <figure class='figure' id='-the-assignment-of-tasks-not-written-by-myself'> 
+   <figure class='figure' id='-the-assignment-of-tasks-not-written-by-myself-'> 
 
                                                                   
 
                                                                   
-<a id='x1-70022'></a>
                                                                   
 
                                                                   
-<figcaption class='caption'><span class='id'>Figure 2: </span><span class='content'>The assignment of tasks (not written by myself)</span></figcaption><!-- tex4ht:label?: x1-70022  -->
+<a id='x1-7003r2'></a>
+<a id='x1-7004'></a>
+<figcaption class='caption'><span class='id'>Figure 2: </span><span class='content'>The assignment of tasks (not written by myself)
+</span></figcaption><!-- tex4ht:label?: x1-7003r  -->
 <img alt='PIC' height='172' src='images/feb/task_list_group.png' width='172' />
                                                                   
 

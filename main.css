@@ -25,6 +25,8 @@
 .msbm-5{font-size:50%;}
 .cmr-17{font-size:170%;}
 .cmr-12{font-size:120%;}
+.cmtt-10{font-family: monospace,monospace;}
+.tctt-1000{font-family: monospace,monospace;}
 p{margin-top:0;margin-bottom:0}
 p.indent{text-indent:0;}
 p + p{margin-top:1em;}
@@ -164,5 +166,9 @@ body { font-family: Minion Pro, Baskerville, Garamond, EB Garamond, Georgia, ser
 .subsectionHead { font-size: 24px; }
 .titlemark { display: inline-block; width: 2em; }
 .figure img { display: block; margin: auto; }
+#listing-1{background-color:#000000;}
+#listing-1{border: 1px solid #000000;}
+#listing-2{background-color:#000000;}
+#listing-2{border: 1px solid #000000;}
 /* end css.sty */
 
