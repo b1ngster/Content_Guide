@@ -23,10 +23,7 @@
 .msam-5{font-size:50%;}
 .msbm-7{font-size:70%;}
 .msbm-5{font-size:50%;}
-.cmr-17{font-size:170%;}
-.cmr-12{font-size:120%;}
 .cmtt-10{font-family: monospace,monospace;}
-.tctt-1000{font-family: monospace,monospace;}
 p{margin-top:0;margin-bottom:0}
 p.indent{text-indent:0;}
 p + p{margin-top:1em;}
@@ -156,6 +153,11 @@ pre.listings{font-family: monospace,monospace; white-space: pre-wrap; margin-top
 pre.lstlisting{font-family: monospace,monospace; white-space: pre-wrap; margin-top:0.5em; margin-bottom:0.5em; }
 pre.lstinputlisting{ font-family: monospace,monospace; white-space: pre-wrap; }
 .lstinputlisting .label{margin-right:0.5em;}
+table[rules] {border-left:solid black 0.4pt; border-right:solid black 0.4pt; }
+table.longtable{border-collapse: collapse; border-spacing: 0;}
+div.longtable{text-align:center;}
+table.longtable{margin-left:auto; margin-right: auto;}
+caption.longtable .id{font-weight:bold;}
 .MathJax_MathML {text-indent: 0;}
 body { font-family: Minion Pro, Baskerville, Garamond, EB Garamond, Georgia, serif; font-size: 18px; line-height: 1.5; max-width: 40em; margin: auto; }
 .titleHead, .sectionHead, .subsectionHead, .textsf { font-family: Myriad Pro, Helvetica, Arial, sans-serif; }
@@ -166,9 +168,12 @@ body { font-family: Minion Pro, Baskerville, Garamond, EB Garamond, Georgia, ser
 .subsectionHead { font-size: 24px; }
 .titlemark { display: inline-block; width: 2em; }
 .figure img { display: block; margin: auto; }
-#listing-1{background-color:#000000;}
-#listing-1{border: 1px solid #000000;}
-#listing-2{background-color:#000000;}
-#listing-2{border: 1px solid #000000;}
+td#TBL-1-1-1{border-bottom:0.112em solid #000}
+td#TBL-1-3-1{border-bottom:0.06999em solid #000}
+td#TBL-1-9-1{border-bottom:0.06999em solid #000}
+td#TBL-1-11-1{border-bottom:0.06999em solid #000}
+td#TBL-1-13-1{border-bottom:0.06999em solid #000}
+td#TBL-1-15-1{border-bottom:0.06999em solid #000}
+td#TBL-1-17-1{border-bottom:0.112em solid #000}
 /* end css.sty */
 
