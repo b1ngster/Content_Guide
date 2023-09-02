@@ -12,7 +12,7 @@
 \usepackage{blindtext}
 \usepackage{longtable}
 \usepackage{booktabs}
-
+\usepackage{changepage}
 \newcommand{\click}[2]{\href{http://#1}{\colorlet{temp}{.}\color{blue}{\underline{\color{temp}#2}}\color{temp}}}  
 \newcommand{\clicks}[2]{\href{https://#1}{\colorlet{temp}{.}\color{blue}{\underline{\color{temp}#2}}\color{temp}}}  
 
@@ -70,8 +70,7 @@
 
 \begin{document}
 
-
-   \begin{titlepage}
+\begin{titlepage}
     \begin{adjustwidth}{-1in}{-1in} % Adjust margins by -1 inch on both sides
         \vskip2cm
         \noindent % Prevent paragraph indentation
@@ -80,7 +79,6 @@
         \vfill
     \end{adjustwidth}
 \end{titlepage}
-
 
 
 \newpage
